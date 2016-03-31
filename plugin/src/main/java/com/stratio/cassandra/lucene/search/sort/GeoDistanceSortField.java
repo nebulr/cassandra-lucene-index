@@ -26,6 +26,7 @@ import com.stratio.cassandra.lucene.column.Columns;
 import com.stratio.cassandra.lucene.schema.Schema;
 import com.stratio.cassandra.lucene.schema.mapping.GeoPointMapper;
 import com.stratio.cassandra.lucene.schema.mapping.Mapper;
+import com.stratio.cassandra.lucene.util.GeospatialUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.queries.function.ValueSource;
 import org.apache.lucene.spatial.SpatialStrategy;
@@ -33,6 +34,8 @@ import org.apache.lucene.spatial.SpatialStrategy;
 import java.util.Comparator;
 
 /**
+ * {@link SortField} to sort geo points by their distance to a fixed reference point.
+ *
  * @author Eduardo Alonso {@literal <eduardoalonso@stratio.com>}
  */
 public class GeoDistanceSortField extends SortField {
@@ -60,32 +63,32 @@ public class GeoDistanceSortField extends SortField {
             throw new IndexException("Mapper name required");
         }
         this.mapper = mapper;
-        this.longitude = GeoPointMapper.checkLongitude("longitude", longitude);
-        this.latitude = GeoPointMapper.checkLatitude("latitude", latitude);
+        this.longitude = GeospatialUtils.checkLongitude("longitude", longitude);
+        this.latitude = GeospatialUtils.checkLatitude("latitude", latitude);
     }
 
     /**
-     * Returns the name of mapper to use to calculate distance.
+     * Returns the name of mapper to be used to calculate distance.
      *
-     * @return The name of mapper to use to calculate distance.
+     * @return the name of mapper
      */
     public String getMapper() {
         return mapper;
     }
 
     /**
-     * Returns the longitude of the center point to sort by min distance to it.
+     * Returns the longitude of the reference point to sort by min distance to it.
      *
-     * @return The longitude of the center point to sort by min distance to it.
+     * @return the longitude of the reference point
      */
     public double getLongitude() {
         return longitude;
     }
 
     /**
-     * Returns the latitude of the center point to sort by min distance to it.
+     * Returns the latitude of the reference point to sort by min distance to it.
      *
-     * @return The latitude of the center point to sort by min distance to it.
+     * @return the latitude of the reference point
      */
     public double getLatitude() {
         return latitude;
@@ -104,7 +107,7 @@ public class GeoDistanceSortField extends SortField {
         }
         GeoPointMapper geoPointMapper = (GeoPointMapper) mapper;
 
-        SpatialStrategy strategy = geoPointMapper.getDistanceStrategy();
+        SpatialStrategy strategy = geoPointMapper.distanceStrategy;
         Point pt = GeoPointMapper.SPATIAL_CONTEXT.makePoint(longitude, latitude);
 
         // The distance (in km)

@@ -56,28 +56,26 @@ public class IndexQueryHandler implements QueryHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(IndexQueryHandler.class);
 
-    @Override
     /** {@inheritDoc} */
-    public ResultMessage.Prepared prepare(String query,
-                                          QueryState state,
-                                          Map<String, ByteBuffer> customPayload) {
+    @Override
+    public ResultMessage.Prepared prepare(String query, QueryState state, Map<String, ByteBuffer> customPayload) {
         return QueryProcessor.instance.prepare(query, state);
     }
 
-    @Override
     /** {@inheritDoc} */
+    @Override
     public ParsedStatement.Prepared getPrepared(MD5Digest id) {
         return QueryProcessor.instance.getPrepared(id);
     }
 
-    @Override
     /** {@inheritDoc} */
+    @Override
     public ParsedStatement.Prepared getPreparedForThrift(Integer id) {
         return QueryProcessor.instance.getPreparedForThrift(id);
     }
 
-    @Override
     /** {@inheritDoc} */
+    @Override
     public ResultMessage processBatch(BatchStatement statement,
                                       QueryState state,
                                       BatchQueryOptions options,
@@ -85,8 +83,8 @@ public class IndexQueryHandler implements QueryHandler {
         return QueryProcessor.instance.processBatch(statement, state, options, customPayload);
     }
 
-    @Override
     /** {@inheritDoc} */
+    @Override
     public ResultMessage processPrepared(CQLStatement statement,
                                          QueryState state,
                                          QueryOptions options,
@@ -95,8 +93,8 @@ public class IndexQueryHandler implements QueryHandler {
         return processStatement(statement, state, options);
     }
 
-    @Override
     /** {@inheritDoc} */
+    @Override
     public ResultMessage process(String query,
                                  QueryState state,
                                  QueryOptions options,
@@ -115,7 +113,7 @@ public class IndexQueryHandler implements QueryHandler {
         return processStatement(prepared, state, options);
     }
 
-    public ResultMessage processStatement(CQLStatement statement, QueryState state, QueryOptions options) {
+    private ResultMessage processStatement(CQLStatement statement, QueryState state, QueryOptions options) {
 
         logger.trace("Process {} @CL.{}", statement, options.getConsistency());
         ClientState clientState = state.getClientState();
@@ -168,7 +166,9 @@ public class IndexQueryHandler implements QueryHandler {
             } else if (page < limit) {
                 String json = UTF8Type.instance.compose(expression.getValue());
                 logger.warn("Disabling paging of {} rows per page for top-k search requesting {} rows: {}",
-                            page, limit, json);
+                            page,
+                            limit,
+                            json);
                 return executeWithoutPaging(select, state, options);
             }
         }
@@ -177,7 +177,7 @@ public class IndexQueryHandler implements QueryHandler {
         return execute(select, state, options);
     }
 
-    public ResultMessage execute(CQLStatement statement, QueryState state, QueryOptions options) {
+    private ResultMessage execute(CQLStatement statement, QueryState state, QueryOptions options) {
         ResultMessage result = statement.execute(state, options);
         return result == null ? new ResultMessage.Void() : result;
     }
@@ -188,7 +188,7 @@ public class IndexQueryHandler implements QueryHandler {
         return (int) method.invoke(select, options);
     }
 
-    public ResultMessage.Rows executeWithoutPaging(SelectStatement select, QueryState state, QueryOptions options)
+    private ResultMessage.Rows executeWithoutPaging(SelectStatement select, QueryState state, QueryOptions options)
     throws ReflectiveOperationException {
 
         ConsistencyLevel cl = options.getConsistency();
@@ -200,12 +200,13 @@ public class IndexQueryHandler implements QueryHandler {
         int userLimit = select.getLimit(options);
         ReadQuery query = select.getQuery(options, nowInSec, userLimit);
 
-        Method method = select.getClass().getDeclaredMethod("execute",
-                                                            ReadQuery.class,
-                                                            QueryOptions.class,
-                                                            QueryState.class,
-                                                            int.class,
-                                                            int.class);
+        Method method = select.getClass()
+                              .getDeclaredMethod("execute",
+                                                 ReadQuery.class,
+                                                 QueryOptions.class,
+                                                 QueryState.class,
+                                                 int.class,
+                                                 int.class);
         method.setAccessible(true);
         return (ResultMessage.Rows) method.invoke(select, query, options, state, nowInSec, userLimit);
     }

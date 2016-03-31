@@ -46,11 +46,6 @@ import java.util.Arrays;
  */
 public class GeoPointMapper extends Mapper {
 
-    private static final double MIN_LATITUDE = -90.0;
-    private static final double MAX_LATITUDE = 90.0;
-    private static final double MIN_LONGITUDE = -180.0;
-    private static final double MAX_LONGITUDE = 180.0;
-
     public static final SpatialContext SPATIAL_CONTEXT = SpatialContext.GEO;
 
     /** The name of the latitude column. */
@@ -71,13 +66,13 @@ public class GeoPointMapper extends Mapper {
     /**
      * Builds a new {@link GeoPointMapper}.
      *
-     * @param field The name of the field.
-     * @param indexed If the field supports searching.
-     * @param sorted If the field supports sorting.
-     * @param validated If the field must be validated.
-     * @param latitude The name of the column containing the latitude.
-     * @param longitude The name of the column containing the longitude.
-     * @param maxLevels The maximum number of levels in the tree.
+     * @param field the name of the field
+     * @param indexed if the field supports searching
+     * @param sorted if the field supports sorting
+     * @param validated if the field must be validated
+     * @param latitude the name of the column containing the latitude
+     * @param longitude the name of the column containing the longitude
+     * @param maxLevels the maximum number of levels in the tree
      */
     public GeoPointMapper(String field,
                           Boolean indexed,
@@ -119,48 +114,6 @@ public class GeoPointMapper extends Mapper {
         bboxStrategy = new BBoxStrategy(SPATIAL_CONTEXT, field + ".bbox");
     }
 
-
-
-    /**
-     * Checks if the specified latitude is correct.
-     *
-     * @param name The name of the latitude field.
-     * @param latitude The value of the latitude field.
-     * @return The latitude.
-     */
-    public static Double checkLatitude(String name, Double latitude) {
-        if (latitude == null) {
-            throw new IndexException("%s required", name);
-        } else if (latitude < MIN_LATITUDE || latitude > MAX_LATITUDE) {
-            throw new IndexException("%s must be in range [%s, %s], but found %s",
-                                     name,
-                                     MIN_LATITUDE,
-                                     MAX_LATITUDE,
-                                     latitude);
-        }
-        return latitude;
-    }
-
-    /**
-     * Checks if the specified longitude is correct.
-     *
-     * @param name The name of the longitude field.
-     * @param longitude The value of the longitude field.
-     * @return The longitude.
-     */
-    public static Double checkLongitude(String name, Double longitude) {
-        if (longitude == null) {
-            throw new IndexException("%s required", name);
-        } else if (longitude < MIN_LONGITUDE || longitude > MAX_LONGITUDE) {
-            throw new IndexException("%s must be in range [%s, %s], but found %s",
-                                     name,
-                                     MIN_LONGITUDE,
-                                     MAX_LONGITUDE,
-                                     longitude);
-        }
-        return longitude;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void addFields(Document document, Columns columns) {
@@ -200,7 +153,7 @@ public class GeoPointMapper extends Mapper {
     /**
      * Returns the latitude contained in the specified {@link Columns}. A valid latitude must in the range [-90, 90].
      *
-     * @param columns The {@link Columns} containing the latitude.
+     * @param columns the columns containing the latitude
      * @return the validated latitude
      */
     public Double readLatitude(Columns columns) {
@@ -212,7 +165,7 @@ public class GeoPointMapper extends Mapper {
      * Returns the longitude contained in the specified {@link Columns}. A valid longitude must in the range [-180,
      * 180].
      *
-     * @param columns The {@link Columns} containing the longitude.
+     * @param columns the columns containing the longitude
      * @return the validated longitude
      */
     public Double readLongitude(Columns columns) {
@@ -225,12 +178,14 @@ public class GeoPointMapper extends Mapper {
      *
      * A valid latitude must in the range [-90, 90].
      *
-     * @param o The {@link Object} containing the latitude.
-     * @return The latitude.
+     * @param o the {@link Object} containing the latitude
+     * @return the latitude
      */
-    private double readLatitude(Object o) {
+    private Double readLatitude(Object o) {
         Double value;
-        if (o instanceof Number) {
+        if (o == null) {
+            return null;
+        } else if (o instanceof Number) {
             value = ((Number) o).doubleValue();
         } else {
             try {
@@ -239,16 +194,7 @@ public class GeoPointMapper extends Mapper {
                 throw new IndexException("Unparseable latitude: %s", o);
             }
         }
-        return checkLatitude("latitude", value);
-    }
-
-    /**
-     * Returns the distance {@link SpatialStrategy}.
-     *
-     * @return The {@link SpatialStrategy}.
-     */
-    public SpatialStrategy getDistanceStrategy() {
-        return distanceStrategy;
+        return GeospatialUtils.checkLatitude("latitude", value);
     }
 
     /**
@@ -256,12 +202,14 @@ public class GeoPointMapper extends Mapper {
      *
      * A valid longitude must in the range [-180, 180].
      *
-     * @param o The {@link Object} containing the latitude.
-     * @return The longitude.
+     * @param o the {@link Object} containing the latitude
+     * @return the longitude
      */
-    private static double readLongitude(Object o) {
+    private static Double readLongitude(Object o) {
         Double value;
-        if (o instanceof Number) {
+        if (o == null) {
+            return null;
+        } else if (o instanceof Number) {
             value = ((Number) o).doubleValue();
         } else {
             try {
@@ -270,7 +218,7 @@ public class GeoPointMapper extends Mapper {
                 throw new IndexException("Unparseable longitude: %s", o);
             }
         }
-        return checkLongitude("longitude", value);
+        return GeospatialUtils.checkLongitude("longitude", value);
     }
 
     /** {@inheritDoc} */

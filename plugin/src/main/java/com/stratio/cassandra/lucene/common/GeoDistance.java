@@ -18,7 +18,7 @@
 
 package com.stratio.cassandra.lucene.common;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.spatial4j.core.distance.DistanceUtils;
 import com.stratio.cassandra.lucene.IndexException;
 import org.codehaus.jackson.annotate.JsonCreator;
@@ -105,7 +105,7 @@ public final class GeoDistance implements Comparable<GeoDistance> {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("value", value).add("unit", unit).toString();
+        return MoreObjects.toStringHelper(this).add("value", value).add("unit", unit).toString();
     }
 
     @Override
@@ -122,5 +122,15 @@ public final class GeoDistance implements Comparable<GeoDistance> {
 
         return Double.compare(that.value, value) == 0 && unit == that.unit;
 
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(value);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (unit != null ? unit.hashCode() : 0);
+        return result;
     }
 }

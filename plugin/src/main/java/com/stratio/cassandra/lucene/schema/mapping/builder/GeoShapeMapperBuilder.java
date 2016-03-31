@@ -18,8 +18,8 @@
 
 package com.stratio.cassandra.lucene.schema.mapping.builder;
 
-import com.stratio.cassandra.lucene.common.JTSNotFoundException;
 import com.stratio.cassandra.lucene.common.GeoTransformation;
+import com.stratio.cassandra.lucene.common.JTSNotFoundException;
 import com.stratio.cassandra.lucene.schema.mapping.GeoPointMapper;
 import com.stratio.cassandra.lucene.schema.mapping.GeoShapeMapper;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -60,8 +60,8 @@ public class GeoShapeMapperBuilder extends MapperBuilder<GeoShapeMapper, GeoShap
     /**
      * Sets the maximum number of levels in the tree.
      *
-     * @param maxLevels The maximum number of levels in the tree.
-     * @return This
+     * @param maxLevels the maximum number of levels in the tree
+     * @return this
      */
     public GeoShapeMapperBuilder maxLevels(Integer maxLevels) {
         this.maxLevels = maxLevels;
@@ -92,8 +92,8 @@ public class GeoShapeMapperBuilder extends MapperBuilder<GeoShapeMapper, GeoShap
     /**
      * Returns the {@link GeoShapeMapper} represented by this {@link MapperBuilder}.
      *
-     * @param field The name of the field to be built.
-     * @return The {@link GeoShapeMapper} represented by this.
+     * @param field the name of the field to be built
+     * @return the {@link GeoShapeMapper} represented by this
      */
     @Override
     public GeoShapeMapper build(String field) {

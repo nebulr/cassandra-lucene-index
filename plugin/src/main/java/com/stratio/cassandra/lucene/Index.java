@@ -57,8 +57,8 @@ public class Index implements org.apache.cassandra.index.Index {
 
     private static final Logger logger = LoggerFactory.getLogger(Index.class);
 
-    private ColumnFamilyStore table;
-    private IndexMetadata indexMetadata;
+    private final ColumnFamilyStore table;
+    private final IndexMetadata indexMetadata;
     private IndexService service;
     private String name;
 
@@ -274,7 +274,7 @@ public class Index implements org.apache.cassandra.index.Index {
     @Override
     public boolean dependsOn(ColumnDefinition column) { // TODO: Could return true only for key and/or mapped columns
         logger.trace("Asking if it depends on column {}", column);
-        return true;
+        return service.schema.maps(column);
     }
 
     /**

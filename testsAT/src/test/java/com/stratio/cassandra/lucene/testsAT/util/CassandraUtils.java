@@ -215,11 +215,7 @@ public class CassandraUtils {
     }
 
     public CassandraUtils dropIndex() {
-        execute(new StringBuilder().append("DROP INDEX ")
-                                   .append(keyspace)
-                                   .append(".")
-                                   .append(index)
-                                   .append(";"));
+        execute(new StringBuilder().append("DROP INDEX ").append(keyspace).append(".").append(index).append(";"));
         return this;
     }
 
@@ -241,14 +237,10 @@ public class CassandraUtils {
             columns = columns.substring(0, columns.length() - 1);
             values = values.substring(0, values.length() - 1);
 
-            batch.add(new SimpleStatement(new StringBuilder().append("INSERT INTO ")
-                                                             .append(qualifiedTable)
-                                                             .append(" (")
-                                                             .append(columns)
-                                                             .append(") VALUES (")
-                                                             .append(values)
-                                                             .append(");")
-                                                             .toString()));
+            batch.add(new SimpleStatement(String.format("INSERT INTO %s (%s) VALUES (%s);",
+                                                        qualifiedTable,
+                                                        columns,
+                                                        values)));
         }
         execute(batch);
         return this;

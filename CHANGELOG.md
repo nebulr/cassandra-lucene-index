@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.0.4.1 (upcoming)
+
+* Allow altering unmapped columns
+* Fix NPE while mapping geo points with explicitly null latitude/longitude value
+
+## 3.0.4.0 (10 March 2016)
+
+* Upgrade to Apache Cassandra 3.0.4
+* Add indexing of time UUID columns with date, date_range and bitemporal mappers
+
 ## 3.0.3.1 (4 March 2016)
 
 * Fix performance issues with ClusteringIndexNamesFilter

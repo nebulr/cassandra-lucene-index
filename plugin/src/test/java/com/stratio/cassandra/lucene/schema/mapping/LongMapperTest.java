@@ -44,11 +44,7 @@ public class LongMapperTest extends AbstractMapperTest {
 
     @Test
     public void testConstructorWithAllArgs() {
-        LongMapper mapper = longMapper().indexed(false)
-                                        .sorted(true)
-                                        .column("column")
-                                        .boost(2.3f)
-                                        .build("field");
+        LongMapper mapper = longMapper().indexed(false).sorted(true).column("column").boost(2.3f).build("field");
         assertEquals("Field is not set", "field", mapper.field);
         assertFalse("Indexed is not set", mapper.indexed);
         assertTrue("Sorted is not set", mapper.sorted);
@@ -70,7 +66,7 @@ public class LongMapperTest extends AbstractMapperTest {
         testJson(builder, "{type:\"long\"}");
     }
 
-    @Test()
+    @Test
     public void testSortField() {
         LongMapper mapper = longMapper().boost(1f).build("field");
         SortField sortField = mapper.sortField("field", true);
@@ -84,7 +80,7 @@ public class LongMapperTest extends AbstractMapperTest {
         assertNull("Base for nulls is wrong", mapper.base("test", null));
     }
 
-    @Test()
+    @Test
     public void testValueString() {
         LongMapper mapper = longMapper().boost(1f).build("field");
         Long parsed = mapper.base("test", "3");

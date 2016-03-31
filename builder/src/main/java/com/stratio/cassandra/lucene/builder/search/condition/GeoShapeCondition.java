@@ -22,7 +22,6 @@ import com.stratio.cassandra.lucene.builder.common.GeoTransformation;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,19 +34,19 @@ public class GeoShapeCondition extends Condition {
 
     /** The name of the field to be matched. */
     @JsonProperty("field")
-    private final String field;
+    final String field;
 
     /** The shape in <a href="http://en.wikipedia.org/wiki/Well-known_text"> WKT</a> format. */
     @JsonProperty("shape")
-    private final String shape;
+    final String shape;
 
     /** The spatial operation to be applied. */
     @JsonProperty("operation")
-    private String operation;
+    String operation;
 
     /** The sequence of transformations to be applied to the shape before searching. */
     @JsonProperty("transformations")
-    private List<GeoTransformation> transformations;
+    List<GeoTransformation> transformations;
 
     /**
      * Constructor receiving the name of the field and the shape.
@@ -56,8 +55,7 @@ public class GeoShapeCondition extends Condition {
      * @param shape the shape in <a href="http://en.wikipedia.org/wiki/Well-known_text"> WKT</a> format
      */
     @JsonCreator
-    public GeoShapeCondition(@JsonProperty("field") String field,
-                             @JsonProperty("shape") String shape) {
+    public GeoShapeCondition(@JsonProperty("field") String field, @JsonProperty("shape") String shape) {
         this.field = field;
         this.shape = shape;
     }
@@ -74,7 +72,8 @@ public class GeoShapeCondition extends Condition {
     }
 
     /**
-     * Sets the transformations to be applied to the shape before using it for indexing it.
+     * Sets the transformations to be applied to the shape before using it for indexing it. Possible values are {@code
+     * intersects}, {@code is_within} and {@code contains}. Defaults to {@code is_within}.
      *
      * @param transformations the sequence of transformations
      * @return this with the transformations set

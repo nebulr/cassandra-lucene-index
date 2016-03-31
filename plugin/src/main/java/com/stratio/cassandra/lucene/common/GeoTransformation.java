@@ -18,7 +18,7 @@
 
 package com.stratio.cassandra.lucene.common;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.spatial4j.core.context.jts.JtsSpatialContext;
 import com.spatial4j.core.shape.jts.JtsGeometry;
 import com.stratio.cassandra.lucene.util.GeospatialUtilsJTS;
@@ -129,10 +129,10 @@ public interface GeoTransformation {
         /** {@inheritDoc} */
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
-                          .add("maxDistance", maxDistance)
-                          .add("minDistance", minDistance)
-                          .toString();
+            return MoreObjects.toStringHelper(this)
+                              .add("maxDistance", maxDistance)
+                              .add("minDistance", minDistance)
+                              .toString();
         }
     }
 
@@ -157,7 +157,7 @@ public interface GeoTransformation {
         /** {@inheritDoc} */
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).toString();
+            return MoreObjects.toStringHelper(this).toString();
         }
     }
 
@@ -166,6 +166,7 @@ public interface GeoTransformation {
      */
     class Difference implements GeoTransformation {
 
+        /** The shape to be subtracted. */
         @JsonProperty("shape")
         public final String other;
 
@@ -196,7 +197,7 @@ public interface GeoTransformation {
         /** {@inheritDoc} */
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).add("other", other).toString();
+            return MoreObjects.toStringHelper(this).add("other", other).toString();
         }
     }
 
@@ -205,6 +206,7 @@ public interface GeoTransformation {
      */
     class Intersection implements GeoTransformation {
 
+        /** The shape to be intersected. */
         @JsonProperty("shape")
         public final String other;
 
@@ -235,7 +237,7 @@ public interface GeoTransformation {
         /** {@inheritDoc} */
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).add("other", other).toString();
+            return MoreObjects.toStringHelper(this).add("other", other).toString();
         }
     }
 
@@ -244,6 +246,7 @@ public interface GeoTransformation {
      */
     class Union implements GeoTransformation {
 
+        /** The shape to be added. */
         @JsonProperty("shape")
         public final String other;
 
@@ -273,7 +276,7 @@ public interface GeoTransformation {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).add("other", other).toString();
+            return MoreObjects.toStringHelper(this).add("other", other).toString();
         }
     }
 }

@@ -44,11 +44,7 @@ public class DoubleMapperTest extends AbstractMapperTest {
 
     @Test
     public void testConstructorWithAllArgs() {
-        DoubleMapper mapper = doubleMapper().indexed(false)
-                                            .sorted(true)
-                                            .column("column")
-                                            .boost(0.3f)
-                                            .build("field");
+        DoubleMapper mapper = doubleMapper().indexed(false).sorted(true).column("column").boost(0.3f).build("field");
         assertEquals("Field is not properly set", "field", mapper.field);
         assertFalse("Indexed is not properly set", mapper.indexed);
         assertTrue("Sorted is not properly set", mapper.sorted);
@@ -60,10 +56,7 @@ public class DoubleMapperTest extends AbstractMapperTest {
 
     @Test
     public void testJsonSerialization() {
-        DoubleMapperBuilder builder = doubleMapper().indexed(false)
-                                                    .sorted(true)
-                                                    .column("column")
-                                                    .boost(0.3f);
+        DoubleMapperBuilder builder = doubleMapper().indexed(false).sorted(true).column("column").boost(0.3f);
         testJson(builder, "{type:\"double\",indexed:false,sorted:true,column:\"column\",boost:0.3}");
     }
 
@@ -73,7 +66,7 @@ public class DoubleMapperTest extends AbstractMapperTest {
         testJson(builder, "{type:\"double\"}");
     }
 
-    @Test()
+    @Test
     public void testSortField() {
         DoubleMapper mapper = doubleMapper().boost(2.3f).build("field");
         SortField sortField = mapper.sortField("field", true);
@@ -81,13 +74,13 @@ public class DoubleMapperTest extends AbstractMapperTest {
         assertTrue("Sort field reverse is wrong", sortField.getReverse());
     }
 
-    @Test()
+    @Test
     public void testValueNull() {
         DoubleMapper mapper = doubleMapper().boost(1f).build("field");
         assertNull("Base for nulls is wrong", mapper.base("test", null));
     }
 
-    @Test()
+    @Test
     public void testValueString() {
         DoubleMapper mapper = doubleMapper().boost(1f).build("field");
         Double parsed = mapper.base("test", "3.4");

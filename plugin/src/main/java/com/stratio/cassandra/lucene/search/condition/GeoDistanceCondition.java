@@ -24,6 +24,7 @@ import com.stratio.cassandra.lucene.IndexException;
 import com.stratio.cassandra.lucene.common.GeoDistance;
 import com.stratio.cassandra.lucene.common.GeoDistanceUnit;
 import com.stratio.cassandra.lucene.schema.mapping.GeoPointMapper;
+import com.stratio.cassandra.lucene.util.GeospatialUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
@@ -59,11 +60,11 @@ public class GeoDistanceCondition extends SingleMapperCondition<GeoPointMapper> 
      * @param boost The boost for this query clause. Documents matching this clause will (in addition to the normal
      * weightings) have their score multiplied by {@code boost}. If {@code null}, then {@link #DEFAULT_BOOST} is used as
      * default.
-     * @param field The name of the field to be matched.
-     * @param latitude The latitude of the reference point.
-     * @param longitude The longitude of the reference point.
-     * @param minGeoDistance The min allowed distance.
-     * @param maxGeoDistance The max allowed distance.
+     * @param field the name of the field to be matched
+     * @param latitude the latitude of the reference point
+     * @param longitude the longitude of the reference point
+     * @param minGeoDistance the min allowed distance
+     * @param maxGeoDistance the max allowed distance
      */
     public GeoDistanceCondition(Float boost,
                                 String field,
@@ -73,8 +74,8 @@ public class GeoDistanceCondition extends SingleMapperCondition<GeoPointMapper> 
                                 GeoDistance maxGeoDistance) {
         super(boost, field, GeoPointMapper.class);
 
-        this.latitude = GeoPointMapper.checkLatitude("latitude", latitude);
-        this.longitude = GeoPointMapper.checkLongitude("longitude", longitude);
+        this.latitude = GeospatialUtils.checkLatitude("latitude", latitude);
+        this.longitude = GeospatialUtils.checkLongitude("longitude", longitude);
 
         if (maxGeoDistance == null) {
             throw new IndexException("max_distance must be provided");
@@ -82,7 +83,6 @@ public class GeoDistanceCondition extends SingleMapperCondition<GeoPointMapper> 
 
         this.maxGeoDistance = maxGeoDistance;
         this.minGeoDistance = minGeoDistance;
-
 
         if (minGeoDistance != null && minGeoDistance.compareTo(maxGeoDistance) >= 0) {
             throw new IndexException("min_distance must be lower than max_distance");

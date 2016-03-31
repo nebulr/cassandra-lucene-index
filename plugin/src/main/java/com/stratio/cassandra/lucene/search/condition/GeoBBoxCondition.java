@@ -22,6 +22,7 @@ import com.spatial4j.core.context.SpatialContext;
 import com.spatial4j.core.shape.Rectangle;
 import com.stratio.cassandra.lucene.IndexException;
 import com.stratio.cassandra.lucene.schema.mapping.GeoPointMapper;
+import com.stratio.cassandra.lucene.util.GeospatialUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.spatial.SpatialStrategy;
@@ -53,11 +54,11 @@ public class GeoBBoxCondition extends SingleMapperCondition<GeoPointMapper> {
      * @param boost The boost for this query clause. Documents matching this clause will (in addition to the normal
      * weightings) have their score multiplied by {@code boost}. If {@code null}, then {@link #DEFAULT_BOOST} is used as
      * default.
-     * @param field The name of the field to be matched.
-     * @param minLatitude The minimum accepted latitude.
-     * @param maxLatitude The maximum accepted latitude.
-     * @param minLongitude The minimum accepted longitude.
-     * @param maxLongitude The maximum accepted longitude.
+     * @param field the name of the field to be matched
+     * @param minLatitude the minimum accepted latitude
+     * @param maxLatitude the maximum accepted latitude
+     * @param minLongitude the minimum accepted longitude
+     * @param maxLongitude the maximum accepted longitude
      */
     public GeoBBoxCondition(Float boost,
                             String field,
@@ -67,10 +68,10 @@ public class GeoBBoxCondition extends SingleMapperCondition<GeoPointMapper> {
                             Double maxLongitude) {
         super(boost, field, GeoPointMapper.class);
 
-        this.minLatitude = GeoPointMapper.checkLatitude("min_latitude", minLatitude);
-        this.maxLatitude = GeoPointMapper.checkLatitude("max_latitude", maxLatitude);
-        this.minLongitude = GeoPointMapper.checkLongitude("min_longitude", minLongitude);
-        this.maxLongitude = GeoPointMapper.checkLongitude("max_longitude", maxLongitude);
+        this.minLatitude = GeospatialUtils.checkLatitude("min_latitude", minLatitude);
+        this.maxLatitude = GeospatialUtils.checkLatitude("max_latitude", maxLatitude);
+        this.minLongitude = GeospatialUtils.checkLongitude("min_longitude", minLongitude);
+        this.maxLongitude = GeospatialUtils.checkLongitude("max_longitude", maxLongitude);
 
         if (minLongitude > maxLongitude) {
             throw new IndexException("min_longitude must be lower than max_longitude");

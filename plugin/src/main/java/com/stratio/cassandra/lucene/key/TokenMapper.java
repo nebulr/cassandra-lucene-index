@@ -82,8 +82,8 @@ public final class TokenMapper {
     /**
      * Adds to the specified {@link Document} the {@link Field}s associated to the token of the specified row key.
      *
-     * @param document A {@link Document}.
-     * @param key The raw partition key to be added.
+     * @param document a {@link Document}
+     * @param key the raw partition key to be added
      */
     public void addFields(Document document, DecoratedKey key) {
         Token token = key.getToken();
@@ -215,7 +215,7 @@ public final class TokenMapper {
         private final boolean includeLower;
         private final boolean includeUpper;
 
-        public CacheKey(Long lower, Long upper, boolean includeLower, boolean includeUpper) {
+        CacheKey(Long lower, Long upper, boolean includeLower, boolean includeUpper) {
             this.lower = lower;
             this.upper = upper;
             this.includeLower = includeLower;

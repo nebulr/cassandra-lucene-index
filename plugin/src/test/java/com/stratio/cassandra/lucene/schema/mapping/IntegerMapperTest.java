@@ -44,11 +44,7 @@ public class IntegerMapperTest extends AbstractMapperTest {
 
     @Test
     public void testConstructorWithAllArgs() {
-        IntegerMapper mapper = integerMapper().indexed(false)
-                                              .sorted(true)
-                                              .column("column")
-                                              .boost(2.3f)
-                                              .build("field");
+        IntegerMapper mapper = integerMapper().indexed(false).sorted(true).column("column").boost(2.3f).build("field");
         assertEquals("Field is not properly set", "field", mapper.field);
         assertFalse("Indexed is not properly set", mapper.indexed);
         assertTrue("Sorted is not properly set", mapper.sorted);
@@ -60,10 +56,7 @@ public class IntegerMapperTest extends AbstractMapperTest {
 
     @Test
     public void testJsonSerialization() {
-        IntegerMapperBuilder builder = integerMapper().indexed(false)
-                                                      .sorted(true)
-                                                      .column("column")
-                                                      .boost(0.3f);
+        IntegerMapperBuilder builder = integerMapper().indexed(false).sorted(true).column("column").boost(0.3f);
         testJson(builder, "{type:\"integer\",indexed:false,sorted:true,column:\"column\",boost:0.3}");
     }
 
@@ -73,7 +66,7 @@ public class IntegerMapperTest extends AbstractMapperTest {
         testJson(builder, "{type:\"integer\"}");
     }
 
-    @Test()
+    @Test
     public void testSortField() {
         IntegerMapper mapper = integerMapper().boost(2.3f).build("field");
         SortField sortField = mapper.sortField("field", true);
@@ -81,13 +74,13 @@ public class IntegerMapperTest extends AbstractMapperTest {
         assertTrue("Sort field reverse is wrong", sortField.getReverse());
     }
 
-    @Test()
+    @Test
     public void testValueNull() {
         IntegerMapper mapper = integerMapper().boost(1f).build("field");
         assertNull("Base for nulls is wrong", mapper.base("test", null));
     }
 
-    @Test()
+    @Test
     public void testValueString() {
         IntegerMapper mapper = integerMapper().boost(1f).build("field");
         Integer parsed = mapper.base("test", "2.7");
